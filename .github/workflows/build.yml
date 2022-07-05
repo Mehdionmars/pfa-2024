@@ -65,3 +65,36 @@ jobs:
         name: Sdaim_APK
         # A file, directory or wildcard pattern that describes what to upload
         path: /tmp/sdaim.apk
+        
+  
+    - name: Kill current node process
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          killall node
+        
+        
+    - name: Removed git and node_modules folder
+      run: rm -rf .git/ node_modules/
+      
+    - name: Copy folder content recursively to remote
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: ../sdaim
+        remote: /home/xe/sdaim
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        rmRemote: true
+        
+    - name: Run xstart script
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          ./xstart
