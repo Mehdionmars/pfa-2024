@@ -39,16 +39,19 @@ jobs:
         # Java distribution. See the list of supported distributions in README file
         distribution: temurin
     
-    - name: Install Expo & EAS build local
+    - name: Install Expo & EAS
     # You may pin to the exact commit or the version.
     # uses: expo/expo-github-action@f98a64c8874c4a163514273f34306f403e962350
       uses: expo/expo-github-action@7.2.0
       with:
         packager: npm
-        # Your Expo username, for authentication.
-        username: ${{ secrets.EXPO_USERNAME }}
-        # Your Expo password, for authentication. (use with secrets)
-        password: ${{ secrets.EXPO_PASSWORD }}
+        # Expo version
+        expo-version: 5.4.12
+        # eas version
+        eas-version: 0.54.1
+        # token for auth
+        token: ${{ secrets.EXPO_TOKEN }}
+        
     - name: Run build locally
       run: eas build --platform android
       
