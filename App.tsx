@@ -1,5 +1,5 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import * as Updates from 'expo-updates';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +10,8 @@ import Login from "./screens/Login";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='Societes'>
@@ -29,6 +31,7 @@ export default function App() {
                     }}
                 />
             </Stack.Navigator>
+            <StatusBar style="auto" />
         </NavigationContainer>
     );
 }
