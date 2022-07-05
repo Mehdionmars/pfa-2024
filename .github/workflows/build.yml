@@ -43,7 +43,11 @@ jobs:
         # token for auth
         token: ${{ secrets.EXPO_TOKEN }}
         
-    - name: Run build locally
+
+    - name: Runtime update
+      run: expo publish
+      
+    - name: Run build
       run: eas build --platform android
         
   
