@@ -67,8 +67,8 @@ jobs:
         path: /tmp/sdaim.apk
         
         
-    - name: Removed git folder
-      run: rm -rf .git
+    - name: Removed git and node_modules folder
+      run: rm -rf .git/ node_modules/
       
     - name: Copy folder content recursively to remote
       uses: garygrossgarten/github-action-scp@release
