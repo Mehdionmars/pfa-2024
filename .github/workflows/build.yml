@@ -55,7 +55,7 @@ jobs:
         token: ${{ secrets.EXPO_TOKEN }}
         
     - name: Run build locally
-      run: eas build --platform android --local --output=$GITHUB_WORKSPACE/sdaim.apk
+      run: eas build --platform android --local --output=/tmp/sdaim.apk
       
     
     - name: Upload APK
@@ -64,4 +64,4 @@ jobs:
         # Artifact name
         name: Sdaim APK
         # A file, directory or wildcard pattern that describes what to upload
-        path: ${{ github.GITHUB_WORKSPACE }}/sdaim.apk
+        path: /tmp/sdaim.apk
