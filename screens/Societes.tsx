@@ -16,6 +16,7 @@ export default function Societes({ navigation, route }: Props) {
             if (!token) {
                 navigation.replace("Login");
             }
+            else 
             fetch(`${API_URL}/api/societes`, {
                 method: "GET",
                 headers: {

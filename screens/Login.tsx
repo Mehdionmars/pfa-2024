@@ -8,9 +8,9 @@ import * as SecureStore from 'expo-secure-store';
 type Props = NavigationProps<"Login">;
 
 export default function Login({ navigation, route }: Props) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+
     useEffect(() => {
         SecureStore.getItemAsync("token").then(token => {
             if (token) {
@@ -18,9 +18,9 @@ export default function Login({ navigation, route }: Props) {
             }
         })
     })
-    
+
     const Login = () => {
-        fetch(`${API_URL}/users/login`, {
+        fetch(`${API_URL}/api/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,14 +30,14 @@ export default function Login({ navigation, route }: Props) {
                 password
             })
         })
-        .then(res => res.json())
-        .then(res => {
-            if (res.token) {
-                SecureStore.setItemAsync("token", res.token);
-                SecureStore.setItemAsync("user", JSON.stringify(res.user));
-                navigation.replace("Societes");
-            }
-        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.token) {
+                    SecureStore.setItemAsync("token", res.token);
+                    SecureStore.setItemAsync("user", JSON.stringify(res.user));
+                    navigation.replace("Societes");
+                }
+            })
     }
 
     return (
@@ -60,10 +60,15 @@ export default function Login({ navigation, route }: Props) {
 
                     <TextInput
                         style={styles.TextInput}
-                        placeholder="Identifiant"
+                        placeholder="Email"
                         placeholderTextColor="#CCCCCC"
-                        onChangeText={(email) => setEmail(email)}
+                        onChangeText={text => setEmail(text)}
                         value={email}
+                        editable={true}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+
                     />
                 </View>
 
