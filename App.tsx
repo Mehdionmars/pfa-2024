@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from "./types";
 import Societes from "./screens/Societes";
 import Login from "./screens/Login";
+import Emplacement from "./screens/Emplacements";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -20,6 +21,7 @@ export default function App() {
                     component={Societes}
                     options={{
                         title: 'Societés',
+                        headerShown: false,
                     }}
                 />
                 <Stack.Screen
@@ -27,6 +29,14 @@ export default function App() {
                     component={Login}
                     options={{
                         title: 'Login',
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name="Emplacements"
+                    component={Emplacement}
+                    options={{
+                        title: 'Emplacements',
                         headerShown: false,
                     }}
                 />

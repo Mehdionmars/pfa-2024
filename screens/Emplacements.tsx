@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaView, Image } from "react-native";
 import * as FileSystem from 'expo-file-system';
-import type { NavigationProps, Societe } from "../types";
+import type { NavigationProps, Emplacement } from "../types";
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "../constants";
 
-type Props = NavigationProps<"Societes">;
+type Props = NavigationProps<"Emplacements">;
 
-export default function Societes({ navigation, route }: Props) {
+export default function Emplacements({ navigation, route }: Props) {
 
-    const [societes, setSocietes] = useState<Societe[]>([]);
+    const [emplacements, setEmplacements] = useState<Emplacement[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
 
@@ -19,7 +19,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes`, {
+                fetch(`${API_URL}/api/emplacements?depth=0&where[societe][equals]=${route.params.idSociete}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export default function Societes({ navigation, route }: Props) {
                     .then(res => res.json())
                     .then(res => {
                         if (res.docs) {
-                            setSocietes(res.docs);
+                            setEmplacements(res.docs);
                             setCurrentPage(res.page);
                             setTotalPages(res.totalPages);
                         }
@@ -43,7 +43,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes?page=${currentPage + 1}`, {
+                fetch(`${API_URL}/api/emplacements?page=${currentPage + 1}&depth=0&where[societe][equals]=${route.params.idSociete}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default function Societes({ navigation, route }: Props) {
                     .then(res => res.json())
                     .then(res => {
                         if (res.docs) {
-                            setSocietes(societes.concat(res.docs));
+                            setEmplacements(emplacements.concat(res.docs));
                             setCurrentPage(res.page);
                             setTotalPages(res.totalPages);
                         }
@@ -74,11 +74,11 @@ export default function Societes({ navigation, route }: Props) {
             />
             <FlatList
                 style={styles.flatlist}
-                data={societes}
-                keyExtractor={(item: Societe) => item.id}
+                data={emplacements}
+                keyExtractor={(item: Emplacement) => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.push("Emplacements", { idSociete: item.id })}
+                        onPress={() => console.log(item)}
                         style={styles.item}
                     >
                         <View style={styles.item_left}>
@@ -91,7 +91,7 @@ export default function Societes({ navigation, route }: Props) {
 
                         </View>
                         <View style={styles.item_right}>
-                            <Image source={{ uri: item.logo.url }} style={styles.logo} />
+                            
                         </View>
 
                     </TouchableOpacity>
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         borderRadius: 10,
+        height: 100,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 10,
         elevation: 6,
-
     },
     load_more: {
         backgroundColor: '#fff',

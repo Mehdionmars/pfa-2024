@@ -3,6 +3,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 export type RootStackParamList = {
     Societes: undefined;
     Login: undefined;
+    Emplacements: { idSociete: string };
 }
 
 export type NavigationProps<RouteName extends keyof RootStackParamList > = NativeStackScreenProps<
@@ -40,4 +41,11 @@ export type Societe = {
     logo: Media;
     created_by: User;
     modified_by: User;
+}
+
+export type Emplacement = {
+    id: string;
+    name: string;
+    description: string | undefined;
+    societe: Societe | string;
 }
