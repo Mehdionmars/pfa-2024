@@ -7,41 +7,53 @@ import { RootStackParamList } from "./types";
 import Societes from "./screens/Societes";
 import Login from "./screens/Login";
 import Emplacement from "./screens/Emplacements";
+import Settings from "./screens/Settings";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
 
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Societes'>
-                <Stack.Screen
-                    name="Societes"
-                    component={Societes}
-                    options={{
-                        title: 'Societés',
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="Login"
-                    component={Login}
-                    options={{
-                        title: 'Login',
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="Emplacements"
-                    component={Emplacement}
-                    options={{
-                        title: 'Emplacements',
-                        headerShown: false,
-                    }}
-                />
-            </Stack.Navigator>
+            <Tab.Navigator>
+                <Tab.Screen name="Acceuil" component={MainStack} />
+                <Tab.Screen name="Paramètres" component={Settings} />
+            </Tab.Navigator>
             <StatusBar style="auto" />
         </NavigationContainer>
+    );
+}
+
+function MainStack() {
+    return (
+        <Stack.Navigator initialRouteName='Societes'>
+            <Stack.Screen
+                name="Societes"
+                component={Societes}
+                options={{
+                    title: 'Societés',
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{
+                    title: 'Login',
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Emplacements"
+                component={Emplacement}
+                options={{
+                    title: 'Emplacements',
+                    headerShown: false,
+                }}
+            />
+        </Stack.Navigator>
     );
 }
