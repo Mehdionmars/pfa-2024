@@ -1,7 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaView, Image } from 'react-native'
+import { NavigationProps } from '../types';
 
-export default function Settings() {
+type Props = NavigationProps<"Settings">;
+
+export default function Settings({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.container}>
         <Text>Settings</Text>

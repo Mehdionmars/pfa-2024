@@ -4,6 +4,7 @@ export type RootStackParamList = {
     Societes: undefined;
     Login: undefined;
     Emplacements: { idSociete: string };
+    Settings: undefined;
 }
 
 export type NavigationProps<RouteName extends keyof RootStackParamList > = NativeStackScreenProps<

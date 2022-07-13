@@ -9,6 +9,7 @@ import Login from "./screens/Login";
 import Emplacement from "./screens/Emplacements";
 import Settings from "./screens/Settings";
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createMaterialBottomTabNavigator();
@@ -18,9 +19,31 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <Tab.Navigator>
-                <Tab.Screen name="Acceuil" component={MainStack} />
-                <Tab.Screen name="Paramètres" component={Settings} />
+            <Tab.Navigator
+                activeColor='#f8bbd0'
+                inactiveColor='#fff'
+                barStyle={{ backgroundColor: '#6a51ae' }}
+            >
+                <Tab.Screen
+                    name="Stack" 
+                    component={MainStack}
+                    options={{
+                        title: 'Accueil',
+                        tabBarIcon: ({ color }) => (
+                            <MaterialIcons name="home" color={color} size={20} />
+                        ),
+                    }}
+                />
+                <Tab.Screen
+                    name="Settings"
+                    component={Settings}
+                    options={{
+                        title: 'Paramètres',
+                        tabBarIcon: ({ color }) => (
+                            <MaterialIcons name="settings" color={color} size={20} />
+                        ),
+                    }}
+                />
             </Tab.Navigator>
             <StatusBar style="auto" />
         </NavigationContainer>
