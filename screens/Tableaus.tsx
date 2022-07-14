@@ -24,7 +24,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?page=${currentPage + 1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
+                fetch(`${API_URL}/api/tableaus?page=${currentPage + 1}&depth=0&where[commande][equals]=${route.params.idCommande}&sort=+updatedAt`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
+                fetch(`${API_URL}/api/tableaus?page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}&sort=+updatedAt`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -116,7 +116,11 @@ export default function Tableaus({ navigation, route }: Props) {
                     renderItem={({ item }) => (
                         <DataTable.Row>
                             <DataTable.Cell>{item.des}</DataTable.Cell>
-                            <DataTable.Cell>{item.designation}</DataTable.Cell>
+                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                <Text numberOfLines={5} style={{fontSize: 10}}>
+                                    {item.designation}
+                                </Text>
+                            </View>
                             <DataTable.Cell>{item.unite}</DataTable.Cell>
                             <DataTable.Cell>{item.quantite}</DataTable.Cell>
                             <DataTable.Cell>
