@@ -12,8 +12,16 @@ export default function Emplacements({ navigation, route }: Props) {
     const [emplacements, setEmplacements] = useState<Emplacement[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
 
     useEffect(() => {
+        navigation.addListener('focus', () => fetchData());
+
+
+    }, [navigation]);
+
+    const fetchData = () => {
+        setIsRefreshing(true);
         SecureStore.getItemAsync("token").then(token => {
             if (!token) {
                 navigation.replace("Login");
@@ -32,10 +40,11 @@ export default function Emplacements({ navigation, route }: Props) {
                             setEmplacements(res.docs);
                             setCurrentPage(res.page);
                             setTotalPages(res.totalPages);
+                            setIsRefreshing(false);
                         }
                     })
         })
-    }, []);
+    }
 
     const loadMore = () => {
         SecureStore.getItemAsync("token").then(token => {
@@ -73,12 +82,14 @@ export default function Emplacements({ navigation, route }: Props) {
                 }}
             />
             <FlatList
+                refreshing={isRefreshing}
+                onRefresh={fetchData}
                 style={styles.flatlist}
                 data={emplacements}
                 keyExtractor={(item: Emplacement) => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        onPress={() => console.log(item)}
+                        onPress={() => navigation.push("Commandes", { idEmplacement: item.id })}
                         style={styles.item}
                     >
                         <View style={styles.item_left}>
@@ -91,7 +102,7 @@ export default function Emplacements({ navigation, route }: Props) {
 
                         </View>
                         <View style={styles.item_right}>
-                            
+
                         </View>
 
                     </TouchableOpacity>

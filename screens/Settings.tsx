@@ -5,11 +5,11 @@ import { NavigationProps } from '../types';
 type Props = NavigationProps<"Settings">;
 
 export default function Settings({ navigation, route }: Props) {
-  return (
-    <SafeAreaView style={styles.container}>
-        <Text>Settings</Text>
-    </SafeAreaView>
-  )
+    return (
+        <SafeAreaView style={styles.container}>
+            <Text>Settings</Text>
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({

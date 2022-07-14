@@ -8,6 +8,8 @@ import Societes from "./screens/Societes";
 import Login from "./screens/Login";
 import Emplacement from "./screens/Emplacements";
 import Settings from "./screens/Settings";
+import Commandes from "./screens/Commandes";
+import Tableaux from "./screens/Tableaus";
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -20,12 +22,15 @@ export default function App() {
     return (
         <NavigationContainer>
             <Tab.Navigator
-                activeColor='#f8bbd0'
-                inactiveColor='#fff'
-                barStyle={{ backgroundColor: '#6a51ae' }}
+                activeColor='#ffc03d'
+                inactiveColor='#e7eefb'
+                barStyle={{
+                    backgroundColor: '#432344',
+                    borderTopWidth: 1,
+                }}
             >
                 <Tab.Screen
-                    name="Stack" 
+                    name="Stack"
                     component={MainStack}
                     options={{
                         title: 'Accueil',
@@ -74,6 +79,22 @@ function MainStack() {
                 component={Emplacement}
                 options={{
                     title: 'Emplacements',
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Commandes"
+                component={Commandes}
+                options={{
+                    title: 'Commandes',
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Tableaus"
+                component={Tableaux}
+                options={{
+                    title: 'Tableaux',
                     headerShown: false,
                 }}
             />

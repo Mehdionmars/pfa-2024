@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaView, Image } from "react-native";
 import * as FileSystem from 'expo-file-system';
-import type { NavigationProps, Societe } from "../types";
+import type { NavigationProps, Commande } from "../types";
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "../constants";
 
-type Props = NavigationProps<"Societes">;
+type Props = NavigationProps<"Commandes">;
 
-export default function Societes({ navigation, route }: Props) {
+export default function Commandes({ navigation, route }: Props) {
 
-    const [societes, setSocietes] = useState<Societe[]>([]);
+    const [commandes, setCommandes] = useState<Commande[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
 
+    useEffect(() => {
+        navigation.addListener('focus', () => fetchData());
+
+    }, [navigation]);
     const fetchData = () => {
         setIsRefreshing(true);
         SecureStore.getItemAsync("token").then(token => {
@@ -21,7 +25,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes`, {
+                fetch(`${API_URL}/api/commandes?depth=0&where[emplacement][equals]=${route.params.idEmplacement}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -31,7 +35,7 @@ export default function Societes({ navigation, route }: Props) {
                     .then(res => res.json())
                     .then(res => {
                         if (res.docs) {
-                            setSocietes(res.docs);
+                            setCommandes(res.docs);
                             setCurrentPage(res.page);
                             setTotalPages(res.totalPages);
                             setIsRefreshing(false);
@@ -39,10 +43,6 @@ export default function Societes({ navigation, route }: Props) {
                     })
         })
     }
-    useEffect(() => {
-        navigation.addListener('focus', () => fetchData());
-
-    }, [navigation]);
 
     const loadMore = () => {
         SecureStore.getItemAsync("token").then(token => {
@@ -50,7 +50,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes?page=${currentPage + 1}`, {
+                fetch(`${API_URL}/api/commandes?page=${currentPage + 1}&depth=0&where[societe][equals]=${route.params.idEmplacement}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export default function Societes({ navigation, route }: Props) {
                     .then(res => res.json())
                     .then(res => {
                         if (res.docs) {
-                            setSocietes(societes.concat(res.docs));
+                            setCommandes(commandes.concat(res.docs));
                             setCurrentPage(res.page);
                             setTotalPages(res.totalPages);
                         }
@@ -83,11 +83,11 @@ export default function Societes({ navigation, route }: Props) {
                 refreshing={isRefreshing}
                 onRefresh={fetchData}
                 style={styles.flatlist}
-                data={societes}
-                keyExtractor={(item: Societe) => item.id}
+                data={commandes}
+                keyExtractor={(item: Commande) => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.push("Emplacements", { idSociete: item.id })}
+                        onPress={() => navigation.push('Tableaus', { idCommande: item.id })}
                         style={styles.item}
                     >
                         <View style={styles.item_left}>
@@ -99,8 +99,9 @@ export default function Societes({ navigation, route }: Props) {
                             </Text>
 
                         </View>
-                        <View style={styles.item_right}>
-                            <Image source={{ uri: item.logo.url }} style={styles.logo} />
+                        <View style={{ ...styles.item_right }}>
+                            <Text style={{ color: item.completed ? "green" : "red" }}>{item.rate}</Text>
+                            <Text style={{ color: item.completed ? "green" : "red" }}>{item.completed ? "Complet" : "Incomplet"}</Text>
                         </View>
 
                     </TouchableOpacity>
@@ -143,12 +144,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         borderRadius: 10,
+        height: 100,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 10,
         elevation: 6,
-
     },
     load_more: {
         backgroundColor: '#fff',
