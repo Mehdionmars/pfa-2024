@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaVie
 import { NavigationProps, User } from '../types';
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from '../constants'
+import { API_URL } from '../constants';
 
 type Props = NavigationProps<"Settings">;
 
@@ -34,8 +34,22 @@ export default function Settings({ navigation, route }: Props) {
     return (
         <SafeAreaView style={styles.container}>
             {
-                !user ? null :
-                    <Text> {user.email} </Text>
+                !user ? null : 
+                <>
+                    <Text style={styles.titre}> Account </Text>
+                    <View>
+                    <Text>Full name: </Text>
+                     <Text>{user.fullname} </Text>
+                     </View>
+                     <Text>Email: {user.email} </Text>
+                    <Text>Phone: {user.phone} </Text>
+                    <Text>Admin:{user.isAdmin?" Yes":" No"} </Text>
+                    <TouchableOpacity style={styles.logoutBtn} onPress={() => {}}>
+          <View  >
+            <Text >{'log out'}</Text>
+          </View>
+        </TouchableOpacity>
+                </>
             }
         </SafeAreaView>
     )
@@ -46,7 +60,25 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         marginTop: 50,
     },
+
+    logoutBtn: {
+        width: "60%",
+        borderRadius: 30,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 480,
+        backgroundColor: "red",
+    },
+
+    titre: {
+     maxWidth: 700,
+     color: 'black',
+     fontSize: 60 ,
+    },
+
+    
 })
