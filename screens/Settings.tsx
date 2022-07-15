@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity,
 import { NavigationProps, User } from '../types';
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
+import * as Updates from 'expo-updates';
 import * as Linking from 'expo-linking';
 import { API_URL } from '../constants';
 
@@ -117,6 +118,7 @@ export default function Settings({ navigation, route }: Props) {
                     onPress={() => {
                         SecureStore.deleteItemAsync("token").then(() => {
                             navigation.navigate("Login");
+                            Updates.reloadAsync();
                         })
                     }}
                 >
