@@ -116,9 +116,15 @@ export default function Settings({ navigation, route }: Props) {
                         height: 50
                     }}
                     onPress={() => {
-                        SecureStore.deleteItemAsync("token").then(() => {
-                            navigation.navigate("Login");
-                            Updates.reloadAsync();
+                        SecureStore.getItemAsync("token").then(token => {
+                            fetch(`${API_URL}/api/users/logout`, {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: `JWT ${token}`
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(res => SecureStore.deleteItemAsync("token").then(() => Updates.reloadAsync()))
                         })
                     }}
                 >
