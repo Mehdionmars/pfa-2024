@@ -32,6 +32,7 @@ export type User = {
     email: string;
     fullname: string;
     phone: string;
+    image: Media | undefined;
     isAdmin: boolean;
     createdAt: string;
     updatedAt: string;
