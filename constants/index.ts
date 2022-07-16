@@ -1,1 +1,1 @@
-export const API_URL = 'https://noctislucis.xyz';
+export const API_URL = 'https://sdaim-u3fks.ondigitalocean.app';
