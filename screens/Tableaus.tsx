@@ -19,12 +19,13 @@ export default function Tableaus({ navigation, route }: Props) {
 
     const fetchData = () => {
         setIsRefreshing(true);
+        setCurrentPage(0)
         SecureStore.getItemAsync("token").then(token => {
             if (!token) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?page=${currentPage + 1}&depth=0&where[commande][equals]=${route.params.idCommande}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/tableaus?sort=des&page=${1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/tableaus?sort=des&page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

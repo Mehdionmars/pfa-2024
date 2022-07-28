@@ -21,7 +21,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes?sort=+updatedAt`, {
+                fetch(`${API_URL}/api/societes?sort=name&page=${1}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes?page=${currentPage + 1}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/societes?sort=name&page=${currentPage + 1}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

@@ -22,10 +22,10 @@ export default function App() {
     return (
         <NavigationContainer>
             <Tab.Navigator
-                activeColor='#ffc03d'
-                inactiveColor='#e7eefb'
+                activeColor='#00e6f6'
+                inactiveColor='#1F6CAB'
                 barStyle={{
-                    backgroundColor: '#432344',
+                    backgroundColor: '#082A3A',
                     borderTopWidth: 1,
                 }}
             >

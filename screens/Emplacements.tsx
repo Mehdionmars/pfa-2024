@@ -27,7 +27,7 @@ export default function Emplacements({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/emplacements?depth=0&where[societe][equals]=${route.params.idSociete}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/emplacements?sort=name&page=1&depth=0&where[societe][equals]=${route.params.idSociete}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export default function Emplacements({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/emplacements?page=${currentPage + 1}&depth=0&where[societe][equals]=${route.params.idSociete}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/emplacements?sort=name&page=${currentPage + 1}&depth=0&where[societe][equals]=${route.params.idSociete}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

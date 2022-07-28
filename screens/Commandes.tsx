@@ -25,7 +25,7 @@ export default function Commandes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/commandes?depth=0&where[emplacement][equals]=${route.params.idEmplacement}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/commandes?sort=name&page=1&depth=0&where[emplacement][equals]=${route.params.idEmplacement}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function Commandes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/commandes?page=${currentPage + 1}&depth=0&where[emplacement][equals]=${route.params.idEmplacement}&sort=+updatedAt`, {
+                fetch(`${API_URL}/api/commandes?sort=name&page=${currentPage + 1}&depth=0&where[emplacement][equals]=${route.params.idEmplacement}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
