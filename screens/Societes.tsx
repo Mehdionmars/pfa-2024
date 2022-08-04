@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaView, Image } from "react-native";
+import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaView, Image, ImageBackground, TextInput } from "react-native";
 import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Societe } from "../types";
 import * as SecureStore from 'expo-secure-store';
+import { LinearGradient } from 'expo-linear-gradient';
 import { API_URL } from "../constants";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NavigationProps<"Societes">;
 
@@ -13,9 +15,12 @@ export default function Societes({ navigation, route }: Props) {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
+    const [search, setSearch] = useState<string>("");
+    const [filter, setFilter] = useState<string>("");
 
     const fetchData = () => {
         setIsRefreshing(true);
+        setSearch("");
         SecureStore.getItemAsync("token").then(token => {
             if (!token) {
                 navigation.replace("Login");
@@ -41,7 +46,6 @@ export default function Societes({ navigation, route }: Props) {
     }
     useEffect(() => {
         navigation.addListener('focus', () => fetchData());
-
     }, [navigation]);
 
     const loadMore = () => {
@@ -50,7 +54,7 @@ export default function Societes({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/societes?sort=name&page=${currentPage + 1}`, {
+                fetch(`${API_URL}/api/societes?sort=name&page=${currentPage + 1}${filter}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -68,73 +72,129 @@ export default function Societes({ navigation, route }: Props) {
         })
     }
 
+    const searchSocietes = (text: string) => {
+        setCurrentPage(1);
+        setFilter(`&where[name][contains]=${text}`);
+        setSearch(text);
+        SecureStore.getItemAsync("token").then(token => {
+            if (!token) {
+                navigation.replace("Login");
+            }
+            else
+                fetch(`${API_URL}/api/societes?sort=name&page=${1}&where[name][contains]=${text}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `JWT ${token}`
+                    }
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.docs) {
+                            setSocietes(res.docs);
+                            setCurrentPage(res.page);
+                            setTotalPages(res.totalPages);
+                            setIsRefreshing(false);
+                        }
+                    })
+        })
+    }
+
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Image source={require('../assets/images/logo.png')}
-                style={{
-                    width: 200,
-                    height: 150,
-                    marginBottom: 10,
-                    borderRadius: 50,
-                }}
-            />
-            <FlatList
-                refreshing={isRefreshing}
-                onRefresh={fetchData}
-                style={styles.flatlist}
-                data={societes}
-                keyExtractor={(item: Societe) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        onPress={() => navigation.push("Emplacements", { idSociete: item.id })}
-                        style={styles.item}
-                    >
-                        <View style={styles.item_left}>
-                            <Text
-                                style={styles.text}
-                                numberOfLines={5}
-                            >
-                                {item.name}
-                            </Text>
-
-                        </View>
-                        <View style={styles.item_right}>
-                            <Image source={{ uri: item.logo.url }} style={styles.logo} />
-                        </View>
-
-                    </TouchableOpacity>
-                )}
-                ListFooterComponent={() => (
-                    currentPage < totalPages ?
+        <LinearGradient
+            style={{ flex: 1 }}
+            colors={['#949494', '#bdc3c7', '#445463']}
+        >
+            <SafeAreaView
+                style={styles.container}
+            >
+                <View
+                    style={{
+                        width: "80%",
+                        flexDirection: "row",
+                        //justifyContent: "space-between",
+                        alignItems: "center",
+                        backgroundColor: "#d9d9d9",
+                        borderRadius: 10,
+                    }}
+                >
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Search"
+                        placeholderTextColor="#000"
+                        onChangeText={text => searchSocietes(text)}
+                        value={search}
+                        editable={true}
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    <MaterialIcons
+                        name="search"
+                        size={30}
+                        color="#000"
+                    />
+                </View>
+                <FlatList
+                    refreshing={isRefreshing}
+                    onRefresh={fetchData}
+                    style={styles.flatlist}
+                    data={societes}
+                    keyExtractor={(item: Societe) => item.id}
+                    renderItem={({ item }) => (
                         <TouchableOpacity
-                            onPress={() => loadMore()}
-                            style={styles.load_more}
+                            onPress={() => navigation.push("Emplacements", { idSociete: item.id })}
+                            style={styles.item}
                         >
-                            <Text>Load more</Text>
+                            <View style={styles.item_left}>
+                                <Text
+                                    style={styles.text}
+                                    numberOfLines={5}
+                                >
+                                    {item.name}
+                                </Text>
+
+                            </View>
+                            <View style={styles.item_right}>
+                                <Image source={{ uri: item.logo.url }} style={styles.logo} />
+                            </View>
+
                         </TouchableOpacity>
-                        : null
-                )}
-            />
-        </SafeAreaView >
+                    )}
+                    ListFooterComponent={() => (
+                        currentPage < totalPages ?
+                            <TouchableOpacity
+                                onPress={() => loadMore()}
+                                style={styles.load_more}
+                            >
+                                <Text>Load more</Text>
+                            </TouchableOpacity>
+                            : null
+                    )}
+                />
+            </SafeAreaView >
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#e0e0e0',
+        //backgroundColor: '#e0e0e0',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 50,
+
     },
     flatlist: {
-        backgroundColor: '#e0e0e0',
+        //backgroundColor: '#e0e0e0',
         Width: '100%',
         marginBottom: 0,
+        marginTop: 10,
     },
     item: {
-        backgroundColor: '#fff',
+        backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -151,7 +211,7 @@ const styles = StyleSheet.create({
 
     },
     load_more: {
-        backgroundColor: '#fff',
+        backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -174,5 +234,12 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50
-    }
+    },
+    TextInput: {
+        color: 'black',
+        backgroundColor: '#d9d9d9',
+        borderRadius: 10,
+        padding: 10,
+        width: '90%',
+    },
 })

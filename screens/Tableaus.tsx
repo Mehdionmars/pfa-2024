@@ -6,6 +6,7 @@ import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Tableau } from "../types";
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "../constants";
+import { LinearGradient } from "expo-linear-gradient";
 
 type Props = NavigationProps<"Tableaus">;
 
@@ -25,7 +26,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?sort=des&page=${1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
+                fetch(`${API_URL}/api/tableaus?sort=des&page=${1}&depth=0&where[commande][equals]=${route.params.idCommande}&limit=100`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -53,7 +54,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 navigation.replace("Login");
             }
             else
-                fetch(`${API_URL}/api/tableaus?sort=des&page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}`, {
+                fetch(`${API_URL}/api/tableaus?sort=des&page=${pageToLoad + 1}&depth=0&where[commande][equals]=${route.params.idCommande}&limit=100`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -71,8 +72,12 @@ export default function Tableaus({ navigation, route }: Props) {
 
 
     return (
+        <LinearGradient
+            style={{ flex: 1 }}
+            colors={['#949494', '#bdc3c7', '#445463']}
+        >
         <SafeAreaView style={styles.container}>
-            <Image
+        <Image
                 source={require('../assets/images/logo.png')}
                 style={{
                     width: 200,
@@ -81,109 +86,111 @@ export default function Tableaus({ navigation, route }: Props) {
                     borderRadius: 50,
                 }}
             />
-            {
-                updating.length !== 0 ?
-                    <View style={styles.loading}>
-                        <Image source={require("../assets/images/updating.gif")} style={{ width: 100, height: 100 }} width={200} height={200} />
-                    </View> : null
-            }
+                {
+                    updating.length !== 0 ?
+                        <View style={styles.loading}>
+                            <Image source={require("../assets/images/updating.gif")} style={{ width: 100, height: 100 }} width={200} height={200} />
+                        </View> : null
+                }
 
 
-            <DataTable>
-                <DataTable.Pagination
-                    page={currentPage}
-                    numberOfPages={totalPages}
-                    numberOfItemsPerPage={10}
-                    onPageChange={page => {
-                        setCurrentPage(page);
-                        loadMore(page);
-                    }}
-                    label={`Page ${currentPage + 1} sur ${totalPages}`}
-                />
-                <DataTable.Header>
-                    <DataTable.Title>D</DataTable.Title>
-                    <DataTable.Title>Désignation</DataTable.Title>
-                    <DataTable.Title>Unité</DataTable.Title>
-                    <DataTable.Title>Quantité</DataTable.Title>
-                    <DataTable.Title>Avance</DataTable.Title>
-                </DataTable.Header>
+                <DataTable style={{marginBottom: 210}}>
+                    <DataTable.Pagination
+                        page={currentPage}
+                        numberOfPages={totalPages}
+                        numberOfItemsPerPage={100}
+                        onPageChange={page => {
+                            setCurrentPage(page);
+                            loadMore(page);
+                        }}
+                        label={`Page ${currentPage + 1} sur ${totalPages}`}
+                    />
+                    <DataTable.Header>
+                        <DataTable.Title>D</DataTable.Title>
+                        <DataTable.Title>Désignation</DataTable.Title>
+                        <DataTable.Title>Unité</DataTable.Title>
+                        <DataTable.Title>Quantité</DataTable.Title>
+                        <DataTable.Title>Avance</DataTable.Title>
+                    </DataTable.Header>
 
-                <FlatList
-                    refreshing={isRefreshing}
-                    onRefresh={fetchData}
-                    style={styles.flatlist}
-                    data={tableaus}
-                    keyExtractor={(item: Tableau) => item.id}
-                    renderItem={({ item }) => (
-                        <DataTable.Row>
-                            <DataTable.Cell>{item.des}</DataTable.Cell>
-                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <Text numberOfLines={5} style={{fontSize: 10}}>
-                                    {item.designation}
-                                </Text>
-                            </View>
-                            <DataTable.Cell>{item.unite}</DataTable.Cell>
-                            <DataTable.Cell>{item.quantite}</DataTable.Cell>
-                            <DataTable.Cell>
-                                <Checkbox
-                                    value={item.avance}
-                                    disabled={false}
-                                    onValueChange={() => {
-                                        SecureStore.getItemAsync("token").then(token => {
-                                            if (!token) {
-                                                navigation.replace("Login");
-                                            }
-                                            else {
-                                                setUpdating([...updating, item.id]);
-                                                fetch(`${API_URL}/api/tableaus/${item.id}?depth=0`, {
-                                                    method: "PUT",
-                                                    headers: {
-                                                        "Content-Type": "application/json",
-                                                        "Authorization": `JWT ${token}`
-                                                    },
-                                                    body: JSON.stringify({ avance: !item.avance })
-                                                })
-                                                    .then(res => res.json())
-                                                    .then(res => {
-                                                        if (res.message && res.message === "Updated successfully.") {
-                                                            setUpdating(updating.filter(id => id !== item.id));
-                                                            setTableaus(prevState => {  // update the entire state with the new value
-                                                                const newState = [...prevState];
-                                                                newState[prevState.indexOf(item)] = { ...item, avance: !item.avance };
-                                                                return newState;
-                                                            })
-                                                        }
+                    <FlatList
+                        refreshing={isRefreshing}
+                        onRefresh={fetchData}
+                        style={styles.flatlist}
+                        data={tableaus}
+                        keyExtractor={(item: Tableau) => item.id}
+                        renderItem={({ item }) => (
+                            <DataTable.Row>
+                                <DataTable.Cell>{item.des}</DataTable.Cell>
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text numberOfLines={5} style={{ fontSize: 10 }} >
+                                        {item.designation}
+                                    </Text>
+                                </View>
+                                <DataTable.Cell>{item.unite}</DataTable.Cell>
+                                <DataTable.Cell>{item.quantite}</DataTable.Cell>
+                                <DataTable.Cell>
+                                    <Checkbox
+                                        value={item.avance}
+                                        disabled={false}
+                                        color="#445463"
+                                        onValueChange={() => {
+                                            setUpdating([...updating, item.id]);
+                                            SecureStore.getItemAsync("token").then(token => {
+                                                if (!token) {
+                                                    navigation.replace("Login");
+                                                }
+                                                else {
+                                                    fetch(`${API_URL}/api/tableaus/${item.id}?depth=0`, {
+                                                        method: "PUT",
+                                                        headers: {
+                                                            "Content-Type": "application/json",
+                                                            "Authorization": `JWT ${token}`
+                                                        },
+                                                        body: JSON.stringify({ avance: !item.avance })
                                                     })
-                                            }
-                                        })
+                                                        .then(res => res.json())
+                                                        .then(res => {
+                                                            if (res.message && res.message === "Updated successfully.") {
+                                                                setUpdating(updating.filter(id => id !== item.id));
+                                                                setTableaus(prevState => {  // update the entire state with the new value
+                                                                    const newState = [...prevState];
+                                                                    newState[prevState.indexOf(item)] = { ...item, avance: !item.avance };
+                                                                    return newState;
+                                                                })
+                                                            }
+                                                        })
+                                                }
+                                            })
 
-                                    }}
-                                    style={{ width: 30, height: 30, marginHorizontal: 10 }}
-                                />
-                            </DataTable.Cell>
-                        </DataTable.Row>
-                    )}
-                />
-            </DataTable>
-        </SafeAreaView >
+                                        }}
+                                        style={{ width: 30, height: 30, marginHorizontal: 10, borderRadius: 10 }}
+                                    />
+                                </DataTable.Cell>
+                            </DataTable.Row>
+                        )}
+                    />
+                </DataTable>
+            </SafeAreaView>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#e0e0e0',
+        //backgroundColor: '#e0e0e0',
         alignItems: 'center',
         justifyContent: 'flex-start',
         marginTop: 50,
     },
     flatlist: {
-        backgroundColor: '#e0e0e0',
+        //backgroundColor: '#e0e0e0',
         Width: '100%',
-        marginBottom: 0,
+        marginBottom: 50,
     },
     item: {
-        backgroundColor: '#fff',
+        backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     load_more: {
-        backgroundColor: '#fff',
+        backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
