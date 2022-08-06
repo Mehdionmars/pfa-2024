@@ -2,7 +2,7 @@
   "expo": {
     "name": "sdaim",
     "slug": "sdaim",
-    "version": "0.3.0",
+    "version": "0.5.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
