@@ -5,8 +5,9 @@ import Checkbox from 'expo-checkbox';
 import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Tableau } from "../types";
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "../constants";
+import { API_URL, defaultGradientBackgroundColors } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
+import { getGradientBackgroundColors } from "../Utils";
 
 type Props = NavigationProps<"Tableaus">;
 
@@ -17,6 +18,8 @@ export default function Tableaus({ navigation, route }: Props) {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [updating, setUpdating] = useState<string[]>([]);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
+
+    const [gradientBgColors, setGradientBgColors] = useState<string[]>(defaultGradientBackgroundColors);
 
     const fetchData = () => {
         setIsRefreshing(true);
@@ -68,13 +71,14 @@ export default function Tableaus({ navigation, route }: Props) {
                         }
                     })
         })
+        getGradientBackgroundColors().then(colors => setGradientBgColors(colors));
     }
 
 
     return (
         <LinearGradient
             style={{ flex: 1 }}
-            colors={['#949494', '#bdc3c7', '#445463']}
+            colors={gradientBgColors}
         >
         <SafeAreaView style={styles.container}>
         <Image

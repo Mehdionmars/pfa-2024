@@ -6,7 +6,7 @@ export type RootStackParamList = {
     Emplacements: { idSociete: string };
     Commandes: { idEmplacement: string };
     Tableaus: { idCommande: string };
-    Settings: undefined;
+    Settings: { setActiveColor: (color: string) => void; setInactiveColor: (color: string) => void, setBackgroundColor: (color: string) => void };
 }
 
 export type NavigationProps<RouteName extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -14,6 +14,18 @@ export type NavigationProps<RouteName extends keyof RootStackParamList> = Native
     RouteName
 >;
 
+
+export type BottomTabColors = {
+    activeColor: string;
+    inactiveColor: string;
+    backgroundColor: string;
+}
+
+export type DefaultBottomTabAvailableColors = {
+    activeColors: string[];
+    inactiveColors: string[];
+    backgroundColors: string[];
+}
 
 
 export type Media = {

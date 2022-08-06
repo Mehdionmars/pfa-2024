@@ -3,9 +3,10 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaVie
 import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Emplacement } from "../types";
 import * as SecureStore from 'expo-secure-store';
-import { API_URL } from "../constants";
+import { API_URL, defaultGradientBackgroundColors } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { getGradientBackgroundColors } from "../Utils";
 
 type Props = NavigationProps<"Emplacements">;
 
@@ -17,6 +18,8 @@ export default function Emplacements({ navigation, route }: Props) {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [filter, setFilter] = useState<string>("");
+
+    const [gradientBgColors, setGradientBgColors] = useState<string[]>(defaultGradientBackgroundColors);
 
     useEffect(() => {
         navigation.addListener('focus', () => fetchData());
@@ -47,6 +50,7 @@ export default function Emplacements({ navigation, route }: Props) {
                         }
                     })
         })
+        getGradientBackgroundColors().then(colors => setGradientBgColors(colors));
     }
 
     const loadMore = () => {
@@ -104,7 +108,7 @@ export default function Emplacements({ navigation, route }: Props) {
     return (
         <LinearGradient
             style={{ flex: 1 }}
-            colors={['#949494', '#bdc3c7', '#445463']}
+            colors={gradientBgColors}
         >
             <SafeAreaView style={styles.container}>
                 <View

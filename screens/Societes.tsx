@@ -4,8 +4,9 @@ import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Societe } from "../types";
 import * as SecureStore from 'expo-secure-store';
 import { LinearGradient } from 'expo-linear-gradient';
-import { API_URL } from "../constants";
+import { API_URL, defaultGradientBackgroundColors } from "../constants";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { getGradientBackgroundColors } from "../Utils";
 
 type Props = NavigationProps<"Societes">;
 
@@ -17,6 +18,7 @@ export default function Societes({ navigation, route }: Props) {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [filter, setFilter] = useState<string>("");
+    const [gradientBgColors, setGradientBgColors] = useState<string[]>(defaultGradientBackgroundColors);
 
     const fetchData = () => {
         setIsRefreshing(true);
@@ -42,6 +44,9 @@ export default function Societes({ navigation, route }: Props) {
                             setIsRefreshing(false);
                         }
                     })
+        })
+        getGradientBackgroundColors().then(colors => {
+            setGradientBgColors(colors);
         })
     }
     useEffect(() => {
@@ -104,7 +109,7 @@ export default function Societes({ navigation, route }: Props) {
     return (
         <LinearGradient
             style={{ flex: 1 }}
-            colors={['#949494', '#bdc3c7', '#445463']}
+            colors={gradientBgColors}
         >
             <SafeAreaView
                 style={styles.container}
