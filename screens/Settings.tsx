@@ -57,7 +57,6 @@ export default function Settings({ navigation, route }: Props) {
                     backgroundColors: res.barBackgroundColors.map((color: any) => color.code),
                 })
                 setAvailableGradientBackgroundColors(res.appBackgroundColors.map((gradient: any) => gradient.gradient.map((color: any) => color.color)))
-                console.log(res.appBackgroundColors.map((gradient: any) => gradient.gradient.map((color: any) => color.color)))
             })
             .catch(err => console.log(err))
 
@@ -262,6 +261,7 @@ export default function Settings({ navigation, route }: Props) {
                                     flexDirection: 'row',
                                     justifyContent: 'space-around',
                                     alignContent: 'space-around',
+                                    flexWrap: 'wrap',
                                 }}
                             >
                                 {
@@ -269,7 +269,9 @@ export default function Settings({ navigation, route }: Props) {
                                         return (
                                             <TouchableOpacity
                                                 key={index}
-                                                onPress={() => setGradientBackgroundColors(color)}>
+                                                onPress={() => setGradientBackgroundColors(color)}
+                                                style={{marginTop: 10}}
+                                                >
                                                 <View>
                                                     <LinearGradient
                                                         colors={color}
