@@ -34,7 +34,7 @@ export default function App() {
                 setIsVisible(true);
                 Updates.fetchUpdateAsync().then((update) => {
                     if (update.isNew) {
-                        Updates.reloadAsync();
+                        setTimeout(()=> Updates.reloadAsync(), 7000);
                     }
                 });
             }
@@ -55,7 +55,7 @@ export default function App() {
                     <Dialog.Title>Mise à jour disponible</Dialog.Title>
                     <Dialog.Content>
                         <Text>
-                            {isUpdateDownloading ? "Téléchargement de la mise à jour..." : "Téléchargement terminé\nCliquez sur le bouton pour installer la mise à jour."}
+                            {isUpdateDownloading ? "Téléchargement de la mise à jour..." : "Téléchargement terminé\nInstallation dans 7 secondes\nCliquez sur le bouton pour installer immédiatement."}
                         </Text>
                     </Dialog.Content>
                     <Dialog.Actions>
