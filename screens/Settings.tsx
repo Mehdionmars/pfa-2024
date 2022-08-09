@@ -5,12 +5,12 @@ import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
 import * as Updates from 'expo-updates';
 import * as Linking from 'expo-linking';
-import { API_URL, defaultAvailableBottomTabColors, defaultBottomTabColors, defaultGradientBackgroundColors } from '../constants';
+import { API_URL, defaultAvailableBottomTabColors, defaultBottomTabColors, defaultGradientBackgroundColors, defaultTouchableColor } from '../constants';
 import { Dialog, Portal, Button, RadioButton } from 'react-native-paper';
 // @ts-ignore
 import ColorPalette from 'react-native-color-palette';
 import { LinearGradient } from "expo-linear-gradient";
-import { getBottomNavigationColors, getGradientBackgroundColors } from '../Utils';
+import { getBottomNavigationColors, getGradientBackgroundColors, getTouchableColor } from '../Utils';
 
 type Props = NavigationProps<"Settings">;
 
@@ -18,16 +18,19 @@ export default function Settings({ navigation, route }: Props) {
 
     const [user, setUser] = useState<User | null>(null);
 
-
     const [isVisible, setIsVisible] = useState<boolean>(false);
-    const [defaultColors, setDefaultColors] = useState<BottomTabColors>(defaultBottomTabColors);
+    const [colorsOld, setColorsOld] = useState<BottomTabColors>(defaultBottomTabColors);
     const [colors, setColors] = useState<BottomTabColors>(defaultBottomTabColors);
     const [availableColors, setAvailableColors] = useState<DefaultBottomTabAvailableColors>(defaultAvailableBottomTabColors);
 
     const [isBackgroundDialogVisible, setIsBackgroundDialogVisible] = useState<boolean>(false);
-    const [defGradientBackgroundColors, setDefGradientBackgroundColors] = useState<string[]>(defaultGradientBackgroundColors);
+    const [gradientBackgroundColorsOld, setGradientBackgroundColorsOld] = useState<string[]>(defaultGradientBackgroundColors);
     const [gradientBackgroundColors, setGradientBackgroundColors] = useState<string[]>(defaultGradientBackgroundColors);
     const [availableGradientBackgroundColors, setAvailableGradientBackgroundColors] = useState<string[][]>([defaultGradientBackgroundColors]);
+
+    const [touchableColor, setTouchableColor] = useState<string>(defaultTouchableColor);
+    const [touchableColorOld, setTouchableColorOld] = useState<string>(defaultTouchableColor);
+    const [isTouchableDialogVisible, setIsTouchableDialogVisible] = useState<boolean>(false);
 
     const fetchData = () => {
         SecureStore.getItemAsync("token").then(token => {
@@ -47,7 +50,10 @@ export default function Settings({ navigation, route }: Props) {
             }
         })
 
-        getBottomNavigationColors().then(colors => setDefaultColors(colors))
+        getBottomNavigationColors().then(colors => {
+            setColorsOld(colors);
+            setColors(colors);
+        })
 
         fetch(`${API_URL}/api/globals/colors`).then(res => res.json())
             .then(res => {
@@ -62,40 +68,58 @@ export default function Settings({ navigation, route }: Props) {
 
         getGradientBackgroundColors().then(colors => {
             setGradientBackgroundColors(colors);
-            setDefGradientBackgroundColors(colors);
+            setGradientBackgroundColorsOld(colors);
         })
-
+        getTouchableColor().then(color => {
+            setTouchableColor(color)
+            setTouchableColorOld(color)
+        })
     }
 
     const updateColors = () => {
         SecureStore.setItemAsync("activeColor", colors.activeColor);
         SecureStore.setItemAsync("inactiveColor", colors.inactiveColor);
         SecureStore.setItemAsync("backgroundColor", colors.backgroundColor);
+        setColorsOld(colors);
         ToastAndroid.show("Colors updated", ToastAndroid.SHORT);
         toggleDialog();
     }
 
     const updateBackgroundColors = () => {
         SecureStore.setItemAsync("gradientBackgroundColors", JSON.stringify(gradientBackgroundColors));
+        setGradientBackgroundColorsOld(gradientBackgroundColors);
         ToastAndroid.show("Background colors updated", ToastAndroid.SHORT);
         toggleBackgroundDialog();
     }
 
+    const updateTouchableColor = () => {
+        SecureStore.setItemAsync("touchableColor", touchableColor);
+        setTouchableColorOld(touchableColor);
+        ToastAndroid.show("Touchable color updated", ToastAndroid.SHORT);
+        toggleTouchableDialog();
+    }
+
     const cancelColorUpdate = () => {
-        setColors(defaultColors);
-        route.params.setActiveColor(defaultColors.activeColor);
-        route.params.setInactiveColor(defaultColors.inactiveColor);
-        route.params.setBackgroundColor(defaultColors.backgroundColor);
+        setColors(colorsOld);
+        route.params.setActiveColor(colorsOld.activeColor);
+        route.params.setInactiveColor(colorsOld.inactiveColor);
+        route.params.setBackgroundColor(colorsOld.backgroundColor);
         toggleDialog();
     }
 
     const cancelBackgroundColorUpdate = () => {
-        setGradientBackgroundColors(defGradientBackgroundColors);
+        setGradientBackgroundColors(gradientBackgroundColorsOld);
         toggleBackgroundDialog();
+    }
+
+    const cancelTouchableColorUpdate = () => {
+        setTouchableColor(touchableColorOld);
+        toggleTouchableDialog();
     }
 
     const toggleDialog = () => setIsVisible(!isVisible);
     const toggleBackgroundDialog = () => setIsBackgroundDialogVisible(!isBackgroundDialogVisible);
+    const toggleTouchableDialog = () => setIsTouchableDialogVisible(!isTouchableDialogVisible);
 
     useEffect(() => {
         navigation.addListener('focus', () => fetchData());
@@ -123,7 +147,7 @@ export default function Settings({ navigation, route }: Props) {
                 </View>
                 <View style={styles.body}>
                     <TouchableOpacity
-                        style={styles.sectionContent}
+                        style={{...styles.sectionContent, backgroundColor: touchableColor}}
                         onPress={() => {
                             user?.isAdmin ? Linking.openURL(`${API_URL}/admin/collections/users?page=1`) : showToast("You are not an admin")
                         }}
@@ -183,6 +207,7 @@ export default function Settings({ navigation, route }: Props) {
                         style={{
                             ...styles.sectionContent,
                             height: 50,
+                            backgroundColor: touchableColor
                         }}
                         onPress={toggleDialog}
                     >
@@ -192,6 +217,7 @@ export default function Settings({ navigation, route }: Props) {
                         style={{
                             ...styles.sectionContent,
                             height: 50,
+                            backgroundColor: touchableColor
                         }}
                         onPress={toggleBackgroundDialog}
                     >
@@ -200,7 +226,18 @@ export default function Settings({ navigation, route }: Props) {
                     <TouchableOpacity
                         style={{
                             ...styles.sectionContent,
-                            height: 50
+                            height: 50,
+                            backgroundColor: touchableColor
+                        }}
+                        onPress={toggleTouchableDialog}
+                    >
+                        <Text>Customize Touchable Color</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            ...styles.sectionContent,
+                            height: 50,
+                            backgroundColor: touchableColor
                         }}
                         onPress={() => {
                             SecureStore.getItemAsync("token").then(token => {
@@ -293,6 +330,24 @@ export default function Settings({ navigation, route }: Props) {
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
+                    <Portal>
+                        <Dialog visible={isTouchableDialogVisible} onDismiss={cancelTouchableColorUpdate}>
+                            <Dialog.Title>Set touchable color</Dialog.Title>
+                            <Dialog.Content>
+                            <ColorPalette
+                                    title="Touchable colors: "
+                                    onChange={(color: any) => {
+                                        setTouchableColor(color);
+                                    }}
+                                    colors={availableColors.activeColors}
+                                />
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button color='grey' onPress={cancelTouchableColorUpdate}> Cancel </Button>
+                                <Button color='blue' onPress={updateTouchableColor}> Ok </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
                 </View>
             </SafeAreaView>
         </LinearGradient>
@@ -332,7 +387,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 8,
         width: '95%',
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

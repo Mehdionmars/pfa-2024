@@ -5,7 +5,7 @@ import Checkbox from 'expo-checkbox';
 import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Tableau } from "../types";
 import * as SecureStore from 'expo-secure-store';
-import { API_URL, defaultGradientBackgroundColors } from "../constants";
+import { API_URL, defaultGradientBackgroundColors, defaultTouchableColor } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { getGradientBackgroundColors } from "../Utils";
 
@@ -13,6 +13,7 @@ type Props = NavigationProps<"Tableaus">;
 
 export default function Tableaus({ navigation, route }: Props) {
 
+    const [touchableColor, setTouchableColor] = useState<string>(defaultTouchableColor);
     const [tableaus, setTableaus] = useState<Tableau[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
         marginBottom: 50,
     },
     item: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     load_more: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,

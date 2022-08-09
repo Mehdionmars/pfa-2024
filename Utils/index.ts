@@ -1,4 +1,4 @@
-import { API_URL, defaultBottomTabColors, defaultGradientBackgroundColors } from "../constants";
+import { API_URL, defaultBottomTabColors, defaultGradientBackgroundColors, defaultTouchableColor } from "../constants";
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabColors } from "../types";
@@ -39,4 +39,13 @@ export const getBottomNavigationColors = async (): Promise<BottomTabColors> => {
         inactiveColor: colors[1],
         backgroundColor: colors[2]
     }
+}
+
+export const getTouchableColor = async (): Promise<string> => {
+    const color = await SecureStore.getItemAsync("touchableColor");
+    if (!color) {
+        await SecureStore.setItemAsync("touchableColor", defaultTouchableColor);
+        return defaultTouchableColor;
+    }
+    return color;
 }

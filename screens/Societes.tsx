@@ -4,14 +4,15 @@ import * as FileSystem from 'expo-file-system';
 import type { NavigationProps, Societe } from "../types";
 import * as SecureStore from 'expo-secure-store';
 import { LinearGradient } from 'expo-linear-gradient';
-import { API_URL, defaultGradientBackgroundColors } from "../constants";
+import { API_URL, defaultGradientBackgroundColors, defaultTouchableColor } from "../constants";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { getGradientBackgroundColors } from "../Utils";
+import { getGradientBackgroundColors, getTouchableColor } from "../Utils";
 
 type Props = NavigationProps<"Societes">;
 
 export default function Societes({ navigation, route }: Props) {
 
+    const [touchableColor, setTouchableColor] = useState<string>(defaultTouchableColor);
     const [societes, setSocietes] = useState<Societe[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -45,9 +46,8 @@ export default function Societes({ navigation, route }: Props) {
                         }
                     })
         })
-        getGradientBackgroundColors().then(colors => {
-            setGradientBgColors(colors);
-        })
+        getGradientBackgroundColors().then(colors => setGradientBgColors(colors))
+        getTouchableColor().then(color => setTouchableColor(color))
     }
     useEffect(() => {
         navigation.addListener('focus', () => fetchData());
@@ -150,7 +150,7 @@ export default function Societes({ navigation, route }: Props) {
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             onPress={() => navigation.push("Emplacements", { idSociete: item.id })}
-                            style={styles.item}
+                            style={{...styles.item, backgroundColor: touchableColor}}
                         >
                             <View style={styles.item_left}>
                                 <Text
@@ -171,7 +171,7 @@ export default function Societes({ navigation, route }: Props) {
                         currentPage < totalPages ?
                             <TouchableOpacity
                                 onPress={() => loadMore()}
-                                style={styles.load_more}
+                                style={{...styles.load_more, backgroundColor: touchableColor}}
                             >
                                 <Text>Load more</Text>
                             </TouchableOpacity>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     item: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
 
     },
     load_more: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,

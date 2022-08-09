@@ -3,15 +3,16 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity, SafeAreaVie
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
 import type { NavigationProps, Commande } from "../types";
-import { API_URL, defaultGradientBackgroundColors } from "../constants";
+import { API_URL, defaultGradientBackgroundColors, defaultTouchableColor } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { getGradientBackgroundColors } from "../Utils";
+import { getGradientBackgroundColors, getTouchableColor } from "../Utils";
 
 type Props = NavigationProps<"Commandes">;
 
 export default function Commandes({ navigation, route }: Props) {
 
+    const [touchableColor, setTouchableColor] = useState<string>(defaultTouchableColor);
     const [commandes, setCommandes] = useState<Commande[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -51,6 +52,7 @@ export default function Commandes({ navigation, route }: Props) {
                     })
         })
         getGradientBackgroundColors().then(colors => setGradientBgColors(colors));
+        getTouchableColor().then(color => setTouchableColor(color))
     }
 
     const loadMore = () => {
@@ -147,7 +149,7 @@ export default function Commandes({ navigation, route }: Props) {
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             onPress={() => navigation.push('Tableaus', { idCommande: item.id })}
-                            style={styles.item}
+                            style={{...styles.item, backgroundColor: touchableColor}}
                         >
                             <View style={styles.item_left}>
                                 <Text
@@ -169,7 +171,7 @@ export default function Commandes({ navigation, route }: Props) {
                         currentPage < totalPages ?
                             <TouchableOpacity
                                 onPress={() => loadMore()}
-                                style={styles.load_more}
+                                style={{...styles.load_more, backgroundColor: touchableColor}}
                             >
                                 <Text>Load more</Text>
                             </TouchableOpacity>
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     item: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     load_more: {
-        backgroundColor: '#d9d9d9',
+        //backgroundColor: '#d9d9d9',
         padding: 10,
         marginVertical: 8,
         marginHorizontal: 16,

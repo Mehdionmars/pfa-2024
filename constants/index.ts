@@ -13,3 +13,5 @@ export const defaultAvailableBottomTabColors = {
 }
 
 export const defaultGradientBackgroundColors = ['#949494', '#bdc3c7', '#445463'];
+
+export const defaultTouchableColor = "#d9d9d9"
