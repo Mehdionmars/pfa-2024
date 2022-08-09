@@ -40,7 +40,8 @@ export default function Tableaus({ navigation, route }: Props) {
                     .then(res => res.json())
                     .then(res => {
                         if (res.docs) {
-                            setTableaus(res.docs);
+                            // @ts-ignore
+                            setTableaus(res.docs.map( a => a.des.split('.').map( n => +n+100000 ).join('.') ).sort().map( a => a.split('.').map( n => +n-100000 ).join('.') ).map( a => res.docs.find( b => b.des === a ) ));
                             setTotalPages(res.totalPages);
                             setIsRefreshing(false);
                         }
