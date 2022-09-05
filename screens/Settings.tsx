@@ -174,6 +174,7 @@ export default function Settings({ navigation, route }: Props) {
                                 <Text style={{
                                     fontSize: 20,
                                     fontWeight: 'bold',
+                                    ...styles.sectionText
                                 }}
                                     numberOfLines={2}
                                 >
@@ -181,21 +182,24 @@ export default function Settings({ navigation, route }: Props) {
                                 </Text>
                                 <Text
                                     style={{
-                                        fontSize: 15
+                                        fontSize: 15,
+                                        ...styles.sectionText
                                     }}
                                 >
                                     {user?.email}
                                 </Text>
                                 <Text
                                     style={{
-                                        fontSize: 15
+                                        fontSize: 15,
+                                        ...styles.sectionText
                                     }}
                                 >
                                     {user?.phone}
                                 </Text>
                                 <Text
                                     style={{
-                                        fontSize: 15
+                                        fontSize: 15,
+                                        ...styles.sectionText
                                     }}
                                 >
                                     {user?.isAdmin ? "Admin" : "Non Admin"}
@@ -207,31 +211,35 @@ export default function Settings({ navigation, route }: Props) {
                         style={{
                             ...styles.sectionContent,
                             height: 50,
-                            backgroundColor: touchableColor
+                            backgroundColor: touchableColor,
+                            display: 'none'
                         }}
                         onPress={toggleDialog}
                     >
-                        <Text>Customize Bar colors</Text>
+                        <Text style={styles.sectionText} >Customize Bar colors</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             ...styles.sectionContent,
                             height: 50,
-                            backgroundColor: touchableColor
+                            backgroundColor: touchableColor,
+                            display: 'none'
                         }}
                         onPress={toggleBackgroundDialog}
+                        disabled
                     >
-                        <Text>Change background gradient</Text>
+                        <Text style={styles.sectionText} >Change background gradient</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             ...styles.sectionContent,
                             height: 50,
-                            backgroundColor: touchableColor
+                            backgroundColor: touchableColor,
+                            display: 'none'
                         }}
                         onPress={toggleTouchableDialog}
                     >
-                        <Text>Customize Touchable Color</Text>
+                        <Text style={styles.sectionText}>Customize Touchable Color</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
@@ -252,7 +260,7 @@ export default function Settings({ navigation, route }: Props) {
                             })
                         }}
                     >
-                        <Text>Logout</Text>
+                        <Text style={styles.sectionText}>Logout</Text>
                     </TouchableOpacity>
                     <Portal>
                         <Dialog visible={isVisible} onDismiss={cancelColorUpdate}>
@@ -373,6 +381,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         marginLeft: 50,
+        color: "#fff"
     },
     body: {
         width: '100%',
@@ -402,8 +411,9 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
+    },
+    sectionText: {
+        color: "#fff"
     }
-
-
 
 })

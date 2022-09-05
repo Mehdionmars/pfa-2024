@@ -69,6 +69,8 @@ export default function App() {
                     inactiveColor={inactiveColor}
                     barStyle={{
                         backgroundColor: backgroundColor,
+                        borderTopWidth: 1,
+                        borderTopColor: "grey",
                     }}
                 >
                     <Tab.Screen
@@ -97,7 +99,7 @@ export default function App() {
                         }}
                     />
                 </Tab.Navigator>
-                <StatusBar style="auto" />
+                <StatusBar style="light" />
             </NavigationContainer>
         </PaperProvider>
     );

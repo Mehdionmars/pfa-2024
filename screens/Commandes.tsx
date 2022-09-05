@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
-        color: '#000',
+        color: '#fff',
     },
     item_left: {
         width: '70%',

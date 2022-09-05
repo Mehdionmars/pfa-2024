@@ -173,7 +173,7 @@ export default function Societes({ navigation, route }: Props) {
                                 onPress={() => loadMore()}
                                 style={{...styles.load_more, backgroundColor: touchableColor}}
                             >
-                                <Text>Load more</Text>
+                                <Text style={styles.text} >Load more</Text>
                             </TouchableOpacity>
                             : null
                     )}
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
-        color: '#000',
+        color: '#f0f0f0',
     },
     item_left: {
         width: '70%',

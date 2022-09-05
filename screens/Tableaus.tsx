@@ -47,6 +47,7 @@ export default function Tableaus({ navigation, route }: Props) {
                         }
                     })
         })
+        getGradientBackgroundColors().then(colors => setGradientBgColors(colors));
     }
     useEffect(() => {
         navigation.addListener('focus', () => fetchData());
@@ -73,7 +74,6 @@ export default function Tableaus({ navigation, route }: Props) {
                         }
                     })
         })
-        getGradientBackgroundColors().then(colors => setGradientBgColors(colors));
     }
 
 
@@ -88,7 +88,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 style={{
                     width: 200,
                     height: 150,
-                    marginBottom: 10,
+                    marginBottom: 0,
                     borderRadius: 50,
                 }}
             />
@@ -112,11 +112,11 @@ export default function Tableaus({ navigation, route }: Props) {
                         label={`Page ${currentPage + 1} sur ${totalPages}`}
                     />
                     <DataTable.Header>
-                        <DataTable.Title>D</DataTable.Title>
-                        <DataTable.Title>Désignation</DataTable.Title>
-                        <DataTable.Title>Unité</DataTable.Title>
-                        <DataTable.Title>Quantité</DataTable.Title>
-                        <DataTable.Title>Avance</DataTable.Title>
+                        <DataTable.Title textStyle={styles.text}>D</DataTable.Title>
+                        <DataTable.Title textStyle={styles.text}>Désignation</DataTable.Title>
+                        <DataTable.Title textStyle={styles.text}>Unité</DataTable.Title>
+                        <DataTable.Title textStyle={styles.text}>Quantité</DataTable.Title>
+                        <DataTable.Title textStyle={styles.text}>Avance</DataTable.Title>
                     </DataTable.Header>
 
                     <FlatList
@@ -126,20 +126,20 @@ export default function Tableaus({ navigation, route }: Props) {
                         data={tableaus}
                         keyExtractor={(item: Tableau) => item.id}
                         renderItem={({ item }) => (
-                            <DataTable.Row>
-                                <DataTable.Cell>{item.des}</DataTable.Cell>
+                            <DataTable.Row style={{borderBottomWidth: 3, borderBottomColor: "grey"}}>
+                                <DataTable.Cell textStyle={styles.text}>{item.des}</DataTable.Cell>
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text numberOfLines={5} style={{ fontSize: 10 }} >
+                                    <Text numberOfLines={5} style={{ fontSize: 10, ...styles.text }} >
                                         {item.designation}
                                     </Text>
                                 </View>
-                                <DataTable.Cell>{item.unite}</DataTable.Cell>
-                                <DataTable.Cell>{item.quantite}</DataTable.Cell>
+                                <DataTable.Cell textStyle={styles.text}>{item.unite}</DataTable.Cell>
+                                <DataTable.Cell textStyle={styles.text}>{item.quantite}</DataTable.Cell>
                                 <DataTable.Cell>
                                     <Checkbox
                                         value={item.avance}
                                         disabled={false}
-                                        color="#445463"
+                                        color="#009e61"
                                         onValueChange={() => {
                                             setUpdating([...updating, item.id]);
                                             SecureStore.getItemAsync("token").then(token => {
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
-        color: '#000',
+        color: '#fff',
     },
     item_left: {
         width: '70%',
