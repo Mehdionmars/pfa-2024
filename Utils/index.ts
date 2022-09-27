@@ -14,7 +14,7 @@ export const getToken = async () => {
 }
 
 export const getGradientBackgroundColors = async (): Promise<string[]> => {
-    return ['#000', '#000'];
+    return ['#29484d', '#232227', '#352b2a'];
     /*
     try {
         const colors = await SecureStore.getItemAsync('gradientBackgroundColors');
@@ -33,9 +33,9 @@ export const getGradientBackgroundColors = async (): Promise<string[]> => {
 
 export const getBottomNavigationColors = async (): Promise<BottomTabColors> => {
     return {
-        activeColor: "#fff",
-        inactiveColor: "#666",
-        backgroundColor: "#000"
+        activeColor: "rgba(255,255,255,0.8)",
+        inactiveColor: "rgba(0,0,0,0.8)",
+        backgroundColor: "#352b2a"
     }
     /*
     const colors = await Promise.all([SecureStore.getItemAsync("activeColor"), SecureStore.getItemAsync("inactiveColor"), SecureStore.getItemAsync("backgroundColor")]);
@@ -52,7 +52,7 @@ export const getBottomNavigationColors = async (): Promise<BottomTabColors> => {
 }
 
 export const getTouchableColor = async (): Promise<string> => {
-    return "#202028";
+    return "#161620";
     /*
     const color = await SecureStore.getItemAsync("touchableColor");
     if (!color) {

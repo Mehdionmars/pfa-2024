@@ -41,9 +41,12 @@ export default function Tableaus({ navigation, route }: Props) {
                     .then(res => {
                         if (res.docs) {
                             // @ts-ignore
-                            setTableaus(res.docs.map( a => a.des.split('.').map( n => +n+100000 ).join('.') ).sort().map( a => a.split('.').map( n => +n-100000 ).join('.') ).map( a => res.docs.find( b => b.des === a ) ));
+                            const sorted = res.docs.map(a => a.des.split('.').map(n => +n + 100000).join('.')).sort().map(a => a.split('.').map(n => +n - 100000).join('.')).map(a => res.docs.find(b => b.des === a));
+                            if (sorted.includes(undefined))setTableaus(res.docs);
+                            else setTableaus(sorted);
                             setTotalPages(res.totalPages);
                             setIsRefreshing(false);
+
                         }
                     })
         })
@@ -82,16 +85,16 @@ export default function Tableaus({ navigation, route }: Props) {
             style={{ flex: 1 }}
             colors={gradientBgColors}
         >
-        <SafeAreaView style={styles.container}>
-        <Image
-                source={require('../assets/images/logo.png')}
-                style={{
-                    width: 200,
-                    height: 150,
-                    marginBottom: 0,
-                    borderRadius: 50,
-                }}
-            />
+            <SafeAreaView style={styles.container}>
+                <Image
+                    source={require('../assets/images/logo.png')}
+                    style={{
+                        width: 200,
+                        height: 150,
+                        marginBottom: 0,
+                        borderRadius: 50,
+                    }}
+                />
                 {
                     updating.length !== 0 ?
                         <View style={styles.loading}>
@@ -100,7 +103,7 @@ export default function Tableaus({ navigation, route }: Props) {
                 }
 
 
-                <DataTable style={{marginBottom: 210}}>
+                <DataTable style={{ marginBottom: 210 }}>
                     <DataTable.Pagination
                         page={currentPage}
                         numberOfPages={totalPages}
@@ -126,7 +129,7 @@ export default function Tableaus({ navigation, route }: Props) {
                         data={tableaus}
                         keyExtractor={(item: Tableau) => item.id}
                         renderItem={({ item }) => (
-                            <DataTable.Row style={{borderBottomWidth: 3, borderBottomColor: "grey"}}>
+                            <DataTable.Row style={{ borderBottomWidth: 3, borderBottomColor: "grey" }}>
                                 <DataTable.Cell textStyle={styles.text}>{item.des}</DataTable.Cell>
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                                     <Text numberOfLines={5} style={{ fontSize: 10, ...styles.text }} >

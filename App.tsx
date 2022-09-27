@@ -69,8 +69,8 @@ export default function App() {
                     inactiveColor={inactiveColor}
                     barStyle={{
                         backgroundColor: backgroundColor,
-                        borderTopWidth: 1,
-                        borderTopColor: "grey",
+                        borderTopWidth: 0,
+                        borderTopColor: "grey"
                     }}
                 >
                     <Tab.Screen
